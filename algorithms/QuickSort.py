@@ -19,6 +19,7 @@ def partition(data, start, end, renderData, tickTime):
         if start < end:
             renderData(data, [YELLOW if x == start else RED if x == end else BLUE for x in range(len(data))])
             data[start], data[end] = data[end], data[start]
+            time.sleep(tickTime)
     renderData(data, [YELLOW if x == pivot_index else RED if x == end else BLUE for x in range(len(data))])       
     data[end], data[pivot_index] = data[pivot_index], data[end]
     renderData(data, [BLUE for x in range(len(data))])
