@@ -1,6 +1,8 @@
 from algorithms.BubbleSort import bubble_sort
 from algorithms.MergeSort import merge_sort
 from algorithms.InsertionSort import insertion_sort
+from algorithms.SelectionSort import selection_sort
+from algorithms.QuickSort import quick_sort
 
 from tkinter import *
 from tkinter import ttk
@@ -15,12 +17,14 @@ main_window.maxsize(1000, 700)
 main_window.config(bg=WHITE)
 
 algorithm_name = StringVar()
-algorithm_list = ['Merge Sort', 'Selection Sort', 'Insertion Sort', 'Bubble Sort']
+algorithm_list = ['Merge Sort', 'Selection Sort', 'Insertion Sort', 'Bubble Sort', 'Quick Sort']
 
 speed_name = StringVar()
 speed_list = ["Fast", "Medium", "Slow"]
 
 data = []
+
+selected = False
 
 def renderData(data, color):
     canvas.delete("all")
@@ -58,17 +62,28 @@ def set_speed():
         return 0.001
 
 def sort():
-    global data
-    timeTick = set_speed()
+    global data, selected
+    if selected:
+        timeTick = set_speed()
 
-    if algo_menu.get() == "Bubble Sort":
-        bubble_sort(data, renderData, timeTick)
-    elif algo_menu.get() == "Merge Sort":
-        merge_sort(data, 0, len(data)-1, renderData, timeTick)
-    elif algo_menu.get() == "Insertion Sort":
-        insertion_sort(data, renderData, timeTick)
+        if algo_menu.get() == "Bubble Sort":
+            bubble_sort(data, renderData, timeTick)
+        elif algo_menu.get() == "Merge Sort":
+            merge_sort(data, 0, len(data)-1, renderData, timeTick)
+        elif algo_menu.get() == "Insertion Sort":
+            insertion_sort(data, renderData, timeTick)
+        elif algo_menu.get() == "Selection Sort":
+            selection_sort(data, renderData, timeTick)
+        elif algo_menu.get() == "Quick Sort":
+            quick_sort(data, 0, len(data)-1, renderData, timeTick)
+        selected = False
+    else:
+        print("Please Press Select First!")
         
-
+def select():
+    global selected
+    selected = True
+    pass
 
 ######## UI ##########
 UI_frame = Frame(main_window, width=900, height=300, bg=WHITE)
@@ -95,6 +110,10 @@ b1.grid(row=2, column=1, padx=5, pady=5)
 # Randomize button
 b2 = Button(UI_frame, text="Randomize!", command=randomize, bg=LIGHT_GRAY)
 b2.grid(row=2, column=0, padx=5, pady=5)
+
+# Select Button
+b3 = Button(UI_frame, text="Select Algo!", command=select, bg=LIGHT_GRAY)
+b3.grid(row=2, column=2, padx=5, pady=5)
 
 # Canvas to render array
 canvas = Canvas(main_window, width=800, height=400, bg=WHITE)
