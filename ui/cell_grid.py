@@ -6,24 +6,35 @@ start = None
 targetSelected = False
 startSelected = False
 drawSelected = False
+pressedSearch = False
 
 def selectTarget():
-    global targetSelected, startSelected, drawSelected
+    global targetSelected, startSelected, drawSelected, pressedSearch
     targetSelected = True
     startSelected = False
     drawSelected = False
+    pressedSearch = False
 
 def selectStart():
-    global targetSelected, startSelected, drawSelected
+    global targetSelected, startSelected, drawSelected, pressedSearch
     targetSelected = False
     startSelected = True
     drawSelected = False
+    pressedSearch = False
 
 def selectDraw():
-    global targetSelected, startSelected, drawSelected
+    global targetSelected, startSelected, drawSelected, pressedSearch
     targetSelected = False
     startSelected = False
     drawSelected = True
+    pressedSearch = False
+
+def searchPressed():
+    global targetSelected, startSelected, drawSelected, pressedSearch
+    targetSelected = False
+    startSelected = False
+    drawSelected = False
+    pressedSearch = True
 
 def getStart():
     global start
@@ -32,14 +43,17 @@ def getStart():
 def getTarget():
     global target
     return target
+
 class Cell():
-    START_COLOR_BG = "blue"
-    TARGET_COLOR_BG = "red"
-    FILLED_COLOR_BG = "green"
+    SEARCH_COLOR_BG = "#ac71f5"
+    START_COLOR_BG = "#1f44ff"
+    TARGET_COLOR_BG = "#f21b1b"
+    FILLED_COLOR_BG = "#20b509"
     EMPTY_COLOR_BG = "white"
-    START_COLOR_BORDER = "blue"
-    TARGET_COLOR_BORDER = "red"
-    FILLED_COLOR_BORDER = "green"
+    SEARCH_COLOR_BORDER = "#ac71f5"
+    START_COLOR_BORDER = "#1f44ff"
+    TARGET_COLOR_BORDER = "#f21b1b"
+    FILLED_COLOR_BORDER = "#20b509"
     EMPTY_COLOR_BORDER = "black"
 
     def __init__(self, master, x, y, size):
@@ -60,27 +74,36 @@ class Cell():
     def getY(self):
         return self.ord
 
+    def getFill(self):
+        return self.fill
+
     def _switch(self):
         """ Switch if the cell is filled or not. """
         self.fill= not self.fill
 
     def draw(self):
-        global targetSelected, startSelected
+        global targetSelected, startSelected, drawSelected, pressedSearch
         """ order to the cell to draw its representation on the canvas """
         if self.master != None :
             # Target Node
             if (targetSelected):
                 self.type = 1
                 fill = Cell.TARGET_COLOR_BG
-                outline = Cell.TARGET_COLOR_BORDER
+                outline = Cell.EMPTY_COLOR_BORDER
             elif (startSelected):
                 self.type = 2
                 fill = Cell.START_COLOR_BG
-                outline = Cell.START_COLOR_BORDER
-            else:
+                outline = Cell.EMPTY_COLOR_BORDER
+            elif (drawSelected):
                 self.type = 3
                 fill = Cell.FILLED_COLOR_BG
-                outline = Cell.FILLED_COLOR_BORDER
+                outline = Cell.EMPTY_COLOR_BORDER
+            elif (pressedSearch):
+                if not self.fill:
+                    self._switch()
+                self.type = 4
+                fill = Cell.SEARCH_COLOR_BG
+                outline = Cell.EMPTY_COLOR_BORDER
 
             if not self.fill:
                 fill = Cell.EMPTY_COLOR_BG
@@ -127,6 +150,14 @@ class CellGrid(Canvas):
         for row in self.grid:
             for cell in row:
                 cell.draw()
+
+    def clear(self):
+        for cell in self.switched:
+            if cell.getFill():
+                cell._switch()
+                self.switched.remove(cell)
+            cell.draw()
+            
 
     def _eventCoords(self, event):
         row = int(event.y / self.cellSize)

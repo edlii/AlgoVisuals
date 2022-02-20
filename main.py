@@ -63,6 +63,16 @@ def renderData(data, color):
         if not grid:
             grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
             grid.pack()
+        else:
+            # grid.clear()
+            selectDraw()
+            for i in range(150):
+                x = random.randint(1, 39)
+                y = random.randint(1, 79)
+                if grid.coords(x,y) not in grid.switched:
+                    grid.coords(x, y)._switch()
+                    grid.switched.append(grid.coords(x,y)) 
+                    grid.coords(x, y).draw()
     main_window.update_idletasks()
 
 

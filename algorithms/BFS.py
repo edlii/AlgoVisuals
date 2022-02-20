@@ -3,7 +3,7 @@ import time
 from colors import *
 from collections import deque as queue
 
-from ui.cell_grid import getTarget
+from ui.cell_grid import getTarget, searchPressed
 
 # Direction vectors
 dRow = [ -1, 0, 1, 0]
@@ -21,9 +21,10 @@ def isValid(vis, row, col):
 def foundTarget(vis, target):
     targetX = target.getX()
     targetY = target.getY()
-    return vis[targetX][targetY]
+    return vis[targetY][targetX]
 
 def breadth_first_search(grid, vis, row, col, tickTime):
+    searchPressed()
     q = queue()
     q.append((row, col))
     vis[row][col] = True
@@ -32,12 +33,18 @@ def breadth_first_search(grid, vis, row, col, tickTime):
         cell = q.popleft()
         x = cell[0]
         y = cell[1]
+        # Target found
         if foundTarget(vis, getTarget()):
             break
-        newCell = grid.coords(x, y)
-        newCell._switch()
-        newCell.draw()
-        grid.switched.append(newCell)
+        # Skip barricade cells
+        if grid.coords(x, y).getType() == 3:
+            continue
+        # Colour in non-start cells
+        if grid.coords(x, y).getType() != 2:
+            newCell = grid.coords(x, y)
+            newCell._switch()
+            newCell.draw()
+            grid.switched.append(newCell)
         for i in range(4):
             adjx = x + dRow[i]
             adjy = y + dCol[i]
