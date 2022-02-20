@@ -25,6 +25,13 @@ def selectDraw():
     startSelected = False
     drawSelected = True
 
+def getStart():
+    global start
+    return start
+
+def getTarget():
+    global target
+    return target
 class Cell():
     START_COLOR_BG = "blue"
     TARGET_COLOR_BG = "red"
@@ -44,15 +51,12 @@ class Cell():
         self.fill= False
         self.type = None
     
-    @property
     def getType(self):
         return self.type
 
-    @property
     def getX(self):
         return self.abs
 
-    @property
     def getY(self):
         return self.ord
 
@@ -88,6 +92,7 @@ class Cell():
             ymax = ymin + self.size
 
             self.master.create_rectangle(xmin, ymin, xmax, ymax, fill = fill, outline = outline)
+            self.master.update_idletasks()
 
 class CellGrid(Canvas):
 
@@ -128,6 +133,9 @@ class CellGrid(Canvas):
         column = int(event.x / self.cellSize)
         return row, column
 
+    def coords(self, row, column):
+        return self.grid[row][column]
+
     # Helper function to ensure single start/target cell
     def singleCell(self, cell):
         cell._switch()
@@ -160,3 +168,4 @@ class CellGrid(Canvas):
                 cell._switch()
                 cell.draw()
                 self.switched.append(cell)
+    

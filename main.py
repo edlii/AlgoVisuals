@@ -3,11 +3,12 @@ from algorithms.MergeSort import merge_sort
 from algorithms.InsertionSort import insertion_sort
 from algorithms.SelectionSort import selection_sort
 from algorithms.QuickSort import quick_sort
+from algorithms.BFS import breadth_first_search
 
 from tkinter import *
 from tkinter import ttk
 from ui.tkinter_custom_button import TkinterCustomButton
-from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget
+from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget, getStart
 
 # Allows for random values
 import random
@@ -37,8 +38,8 @@ def renderData(data, color):
     canvas.delete("all")
     canvas_width = 800
     canvas_height = 400
-    # if (algo_menu.get() in sort_algorithm_list):
     if (algo_menu.get() in sort_algorithm_list):
+        b1.set_text("Sort!")
         setVisibleDrawMode(False)
         if grid:
             grid.delete("all")
@@ -57,6 +58,7 @@ def renderData(data, color):
             y1 = canvas_height
             canvas.create_rectangle(x0, y0, x1, y1, fill=color[i])
     else:
+        b1.set_text("Search!")
         setVisibleDrawMode(True)
         if not grid:
             grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
@@ -82,8 +84,10 @@ def set_speed():
         return 0.001
 
 def sort():
-    global data
+    global data, grid
     timeTick = set_speed()
+    canvas_width = 800
+    canvas_height = 400
 
     if algo_menu.get() == "Bubble Sort":
         bubble_sort(data, renderData, timeTick)
@@ -95,6 +99,11 @@ def sort():
         selection_sort(data, renderData, timeTick)
     elif algo_menu.get() == "Quick Sort":
         quick_sort(data, 0, len(data)-1, renderData, timeTick)
+    elif algo_menu.get() == "Breadth First Search":
+        vis = [[ False for i in range(int(canvas_width/10))] for i in range(int(canvas_height/10))]
+        x = getStart().getX()
+        y = getStart().getY()
+        breadth_first_search(grid, vis, y, x, timeTick)
 
 def setVisibleDrawMode(on):
     global b3, b4, b5
@@ -154,7 +163,7 @@ b5.place(x = -200, y = 50)
 
 # Canvas to render array
 canvas = Canvas(main_window, width=800, height=400, bg=WHITE)
-canvas.grid(row=1, column=0, padx=10, pady=10)
+canvas.grid(row=1, column=0, padx=5, pady=10)
 
 
 main_window.mainloop()
