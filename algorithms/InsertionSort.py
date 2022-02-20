@@ -8,6 +8,7 @@ def insertion_sort(data, renderData, timeTick):
         i = j - 1
         while i >= 0 and data[i] > key:
             data[i+1] = data[i]
+            time.sleep = timeTick
             renderData(data, [PURPLE if x == i else RED if x == i-1 else BLUE for x in range(len(data))])
             i = i - 1
         data[i+1] = key
