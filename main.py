@@ -32,12 +32,17 @@ grid = None
 
 def renderData(data, color):
     global grid
+    global canvas
     canvas.delete("all")
     canvas_width = 800
     canvas_height = 400
     # if (algo_menu.get() in sort_algorithm_list):
     if (algo_menu.get() in sort_algorithm_list):
-        if grid: grid.delete()
+        if grid:
+            grid.delete("all")
+            grid = None
+            canvas = Canvas(main_window, width=800, height=400, bg=WHITE)
+            canvas.grid(row=1, column=0, padx=10, pady=10)
         x_width = canvas_width / (len(data) + 1)
         offset = 4
         spacing = 1
@@ -53,8 +58,6 @@ def renderData(data, color):
         if not grid:
             grid = CellGrid(canvas, 40, 80, 10)
             grid.pack()
-            grid.delete()
-            canvas.mainloop()
     main_window.update_idletasks()
 
 
@@ -108,17 +111,17 @@ speed_menu = ttk.Combobox(UI_frame, textvariable=speed_name, values=speed_list)
 speed_menu.grid(row=1, column=1, padx=5, pady=5)
 speed_menu.current(0)
 
-# Sort Button
-b1 = TkinterCustomButton(text="Sort!", corner_radius=10, command=sort)
-b1.place(x=425, y=85)
-
 # Randomize button
-b2 = TkinterCustomButton(text="Randomize!", corner_radius=10, command=randomize)
-b2.place(x=275, y=85)
+b2 = TkinterCustomButton(master=UI_frame, text="Randomize!", corner_radius=10, command=randomize)
+b2.grid(row=2, column=0, padx=10, pady=10)
+
+# Sort Button
+b1 = TkinterCustomButton(master=UI_frame, text="Sort!", corner_radius=10, command=sort)
+b1.grid(row=2, column=1, padx=10, pady=10)
 
 # Canvas to render array
 canvas = Canvas(main_window, width=800, height=400, bg=WHITE)
-canvas.grid(row=1, column=0, padx=10, pady=(45,10))
+canvas.grid(row=1, column=0, padx=10, pady=10)
 
 
 main_window.mainloop()
