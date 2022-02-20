@@ -1,5 +1,8 @@
 from tkinter import *
 
+target = None
+start = None
+
 targetSelected = False
 startSelected = False
 drawSelected = False
@@ -21,6 +24,7 @@ def selectDraw():
     targetSelected = False
     startSelected = False
     drawSelected = True
+
 class Cell():
     START_COLOR_BG = "blue"
     TARGET_COLOR_BG = "red"
@@ -39,6 +43,18 @@ class Cell():
         self.size= size
         self.fill= False
         self.type = None
+    
+    @property
+    def getType(self):
+        return self.type
+
+    @property
+    def getX(self):
+        return self.abs
+
+    @property
+    def getY(self):
+        return self.ord
 
     def _switch(self):
         """ Switch if the cell is filled or not. """
@@ -102,7 +118,6 @@ class CellGrid(Canvas):
         self.draw()
 
 
-
     def draw(self):
         for row in self.grid:
             for cell in row:
@@ -113,19 +128,35 @@ class CellGrid(Canvas):
         column = int(event.x / self.cellSize)
         return row, column
 
+    # Helper function to ensure single start/target cell
+    def singleCell(self, cell):
+        cell._switch()
+        cell.draw()
+        self.switched.append(cell)
+
     def handleMouseClick(self, event):
+        global target, start, targetSelected, startSelected
         row, column = self._eventCoords(event)
+        if targetSelected or startSelected:
+            if target and targetSelected:
+                self.singleCell(target)
+            elif start and startSelected:
+                self.singleCell(start)
         cell = self.grid[row][column]
         cell._switch()
         cell.draw()
+        if targetSelected:
+            target = cell
+        elif startSelected:
+            start = cell
         #add the cell to the list of cell switched during the click
         self.switched.append(cell)
 
     def handleMouseMotion(self, event):
-        row, column = self._eventCoords(event)
-        cell = self.grid[row][column]
-
-        if cell not in self.switched:
-            cell._switch()
-            cell.draw()
-            self.switched.append(cell)
+        if not (targetSelected or startSelected):
+            row, column = self._eventCoords(event)
+            cell = self.grid[row][column]
+            if cell not in self.switched:
+                cell._switch()
+                cell.draw()
+                self.switched.append(cell)
