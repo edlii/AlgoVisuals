@@ -1,4 +1,5 @@
 from algorithms.BubbleSort import bubble_sort
+from algorithms.DFS import depth_first_search
 from algorithms.MergeSort import merge_sort
 from algorithms.InsertionSort import insertion_sort
 from algorithms.SelectionSort import selection_sort
@@ -8,7 +9,7 @@ from algorithms.BFS import breadth_first_search
 from tkinter import *
 from tkinter import ttk
 from ui.tkinter_custom_button import TkinterCustomButton
-from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget, getStart
+from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget, getStart, emptyFill
 
 # Allows for random values
 import random
@@ -21,7 +22,7 @@ main_window.config(bg=WHITE)
 
 algorithm_name = StringVar()
 sort_algorithm_list = ['Merge Sort', 'Selection Sort', 'Insertion Sort', 'Bubble Sort', 'Quick Sort']
-pathfinding_algo_list = ['Breadth First Search']
+pathfinding_algo_list = ['Breadth First Search', 'Depth First Search']
 algo_list = sort_algorithm_list + pathfinding_algo_list
 
 speed_name = StringVar()
@@ -64,7 +65,6 @@ def renderData(data, color):
             grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
             grid.pack()
         else:
-            # grid.clear()
             selectDraw()
             for i in range(150):
                 x = random.randint(1, 39)
@@ -114,6 +114,11 @@ def sort():
         x = getStart().getX()
         y = getStart().getY()
         breadth_first_search(grid, vis, y, x, timeTick)
+    elif algo_menu.get() == "Depth First Search":
+        vis = [[ False for i in range(int(canvas_width/10))] for i in range(int(canvas_height/10))]
+        x = getStart().getX()
+        y = getStart().getY()
+        depth_first_search(grid, vis, y, x, timeTick)
 
 def setVisibleDrawMode(on):
     global b3, b4, b5

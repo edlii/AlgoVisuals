@@ -36,6 +36,13 @@ def searchPressed():
     drawSelected = False
     pressedSearch = True
 
+def emptyFill():
+    global targetSelected, startSelected, drawSelected, pressedSearch
+    targetSelected = False
+    startSelected = False
+    drawSelected = False
+    pressedSearch = False
+
 def getStart():
     global start
     return start
@@ -120,6 +127,8 @@ class Cell():
 class CellGrid(Canvas):
 
     def __init__(self,master, rowNumber, columnNumber, cellSize, *args, **kwargs):
+        emptyFill()
+        
         Canvas.__init__(self, master, width = cellSize * columnNumber , height = cellSize * rowNumber, *args, **kwargs)
 
         self.cellSize = cellSize
@@ -153,10 +162,10 @@ class CellGrid(Canvas):
 
     def clear(self):
         for cell in self.switched:
-            if cell.getFill():
-                cell._switch()
-                self.switched.remove(cell)
+            cell.fill = False
+            cell.type = 0
             cell.draw()
+        self.switched.clear()
             
 
     def _eventCoords(self, event):
