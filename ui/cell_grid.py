@@ -1,8 +1,33 @@
 from tkinter import *
 
+targetSelected = False
+startSelected = False
+drawSelected = False
+
+def selectTarget():
+    global targetSelected, startSelected, drawSelected
+    targetSelected = True
+    startSelected = False
+    drawSelected = False
+
+def selectStart():
+    global targetSelected, startSelected, drawSelected
+    targetSelected = False
+    startSelected = True
+    drawSelected = False
+
+def selectDraw():
+    global targetSelected, startSelected, drawSelected
+    targetSelected = False
+    startSelected = False
+    drawSelected = True
 class Cell():
+    START_COLOR_BG = "blue"
+    TARGET_COLOR_BG = "red"
     FILLED_COLOR_BG = "green"
     EMPTY_COLOR_BG = "white"
+    START_COLOR_BORDER = "blue"
+    TARGET_COLOR_BORDER = "red"
     FILLED_COLOR_BORDER = "green"
     EMPTY_COLOR_BORDER = "black"
 
@@ -13,16 +38,29 @@ class Cell():
         self.ord = y
         self.size= size
         self.fill= False
+        self.type = None
 
     def _switch(self):
         """ Switch if the cell is filled or not. """
         self.fill= not self.fill
 
     def draw(self):
+        global targetSelected, startSelected
         """ order to the cell to draw its representation on the canvas """
         if self.master != None :
-            fill = Cell.FILLED_COLOR_BG
-            outline = Cell.FILLED_COLOR_BORDER
+            # Target Node
+            if (targetSelected):
+                self.type = 1
+                fill = Cell.TARGET_COLOR_BG
+                outline = Cell.TARGET_COLOR_BORDER
+            elif (startSelected):
+                self.type = 2
+                fill = Cell.START_COLOR_BG
+                outline = Cell.START_COLOR_BORDER
+            else:
+                self.type = 3
+                fill = Cell.FILLED_COLOR_BG
+                outline = Cell.FILLED_COLOR_BORDER
 
             if not self.fill:
                 fill = Cell.EMPTY_COLOR_BG
@@ -36,6 +74,7 @@ class Cell():
             self.master.create_rectangle(xmin, ymin, xmax, ymax, fill = fill, outline = outline)
 
 class CellGrid(Canvas):
+
     def __init__(self,master, rowNumber, columnNumber, cellSize, *args, **kwargs):
         Canvas.__init__(self, master, width = cellSize * columnNumber , height = cellSize * rowNumber, *args, **kwargs)
 
@@ -59,7 +98,7 @@ class CellGrid(Canvas):
         self.bind("<B1-Motion>", self.handleMouseMotion)
         #bind release button action - clear the memory of midified cells.
         self.bind("<ButtonRelease-1>", lambda event: self.switched.clear())
-
+        
         self.draw()
 
 
