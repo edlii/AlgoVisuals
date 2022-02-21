@@ -9,7 +9,7 @@ from algorithms.BFS import breadth_first_search
 from tkinter import *
 from tkinter import ttk
 from ui.tkinter_custom_button import TkinterCustomButton
-from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget, getStart, emptyFill
+from ui.cell_grid import CellGrid, selectDraw, selectStart, selectTarget, getStart
 
 # Allows for random values
 import random
@@ -64,6 +64,7 @@ def renderData(data, color):
         if not grid:
             grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
             grid.pack()
+            selectTarget()
         else:
             selectDraw()
             for i in range(150):
@@ -73,6 +74,7 @@ def renderData(data, color):
                     grid.coords(x, y)._switch()
                     grid.switched.append(grid.coords(x,y)) 
                     grid.coords(x, y).draw()
+            draw_mode.set(3)
     main_window.update_idletasks()
 
 

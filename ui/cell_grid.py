@@ -226,9 +226,10 @@ class CellGrid(Canvas):
     def handleMouseMotion(self, event):
         if not (targetSelected or startSelected):
             row, column = self._eventCoords(event)
-            cell = self.grid[row][column]
-            if cell not in self.switched:
-                cell._switch()
-                cell.draw()
-                self.switched.append(cell)
+            if row <= 39 and column <= 79:
+                cell = self.grid[row][column]
+                if cell not in self.switched:
+                    cell._switch()
+                    cell.draw()
+                    self.switched.append(cell)
     
