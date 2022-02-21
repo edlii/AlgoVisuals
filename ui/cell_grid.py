@@ -7,41 +7,55 @@ targetSelected = False
 startSelected = False
 drawSelected = False
 pressedSearch = False
+shortestPath = False
 
 def selectTarget():
-    global targetSelected, startSelected, drawSelected, pressedSearch
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
     targetSelected = True
     startSelected = False
     drawSelected = False
     pressedSearch = False
+    shortestPath = False
 
 def selectStart():
-    global targetSelected, startSelected, drawSelected, pressedSearch
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
     targetSelected = False
     startSelected = True
     drawSelected = False
     pressedSearch = False
+    shortestPath = False
 
 def selectDraw():
-    global targetSelected, startSelected, drawSelected, pressedSearch
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
     targetSelected = False
     startSelected = False
     drawSelected = True
     pressedSearch = False
+    shortestPath = False
 
 def searchPressed():
-    global targetSelected, startSelected, drawSelected, pressedSearch
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
     targetSelected = False
     startSelected = False
     drawSelected = False
     pressedSearch = True
+    shortestPath = False
 
-def emptyFill():
-    global targetSelected, startSelected, drawSelected, pressedSearch
+def shortestPathFill():
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
     targetSelected = False
     startSelected = False
     drawSelected = False
     pressedSearch = False
+    shortestPath = True
+
+def emptyFill():
+    global targetSelected, startSelected, drawSelected, pressedSearch, shortestPath
+    targetSelected = False
+    startSelected = False
+    drawSelected = False
+    pressedSearch = False
+    shortestPath = False
 
 def getStart():
     global start
@@ -52,15 +66,11 @@ def getTarget():
     return target
 
 class Cell():
-    SEARCH_COLOR_BG = "#ac71f5"
+    SEARCH_COLOR_BG = "#c68bf7"
     START_COLOR_BG = "#1f44ff"
     TARGET_COLOR_BG = "#f21b1b"
     FILLED_COLOR_BG = "#20b509"
     EMPTY_COLOR_BG = "white"
-    SEARCH_COLOR_BORDER = "#ac71f5"
-    START_COLOR_BORDER = "#1f44ff"
-    TARGET_COLOR_BORDER = "#f21b1b"
-    FILLED_COLOR_BORDER = "#20b509"
     EMPTY_COLOR_BORDER = "black"
 
     def __init__(self, master, x, y, size):
@@ -111,6 +121,9 @@ class Cell():
                 self.type = 4
                 fill = Cell.SEARCH_COLOR_BG
                 outline = Cell.EMPTY_COLOR_BORDER
+            elif (shortestPath):
+                fill = "#fcba03"
+                outline = Cell.EMPTY_COLOR_BORDER
 
             if not self.fill:
                 fill = Cell.EMPTY_COLOR_BG
@@ -159,6 +172,16 @@ class CellGrid(Canvas):
         for row in self.grid:
             for cell in row:
                 cell.draw()
+
+    def drawPath(self, path):
+        shortestPathFill()
+        for coord in path:
+            cell = self.coords(coord[0], coord[1])
+            if cell == start:
+                continue
+            if cell == target:
+                break
+            cell.draw()
 
     def clear(self):
         for cell in self.switched:

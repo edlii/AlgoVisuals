@@ -1,7 +1,7 @@
 import time
 
 from colors import *
-from collections import deque as queue
+from collections import deque
 
 from ui.cell_grid import getTarget, searchPressed
 
@@ -25,17 +25,13 @@ def foundTarget(vis, target):
 
 def breadth_first_search(grid, vis, row, col, tickTime):
     searchPressed()
-    q = queue()
-    q.append((row, col))
+    q = deque([[(row, col)]])
     vis[row][col] = True
 
     while len(q) > 0:
-        cell = q.popleft()
-        x = cell[0]
-        y = cell[1]
+        path = q.popleft()
         # Target found
-        if foundTarget(vis, getTarget()):
-            break
+        x, y = path[-1]
         # Skip barricade cells
         if grid.coords(x, y).getType() == 3:
             continue
@@ -49,7 +45,11 @@ def breadth_first_search(grid, vis, row, col, tickTime):
             adjx = x + dRow[i]
             adjy = y + dCol[i]
             if (isValid(vis, adjx, adjy)):
-                q.append((adjx, adjy))
+                q.append(path + [(adjx, adjy)])
                 vis[adjx][adjy] = True
+                # Target found
+                if foundTarget(vis, getTarget()):
+                    grid.drawPath(path)
+                    return
         time.sleep(tickTime)
 

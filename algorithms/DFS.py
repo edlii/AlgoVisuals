@@ -39,14 +39,15 @@ def depth_first_search(grid, vis, row, col, tickTime):
         if not isValid(vis, x, y):
             continue
 
+        # Skip barricade cells
+        if grid.coords(x, y).getType() == 3:
+            continue
+
         vis[x][y] = True
 
         # Target found
         if foundTarget(vis, getTarget()):
             break
-        # Skip barricade cells
-        if grid.coords(x, y).getType() == 3:
-            continue
         # Colour in non-start cells
         if grid.coords(x, y).getType() != 2:
             newCell = grid.coords(x, y)
