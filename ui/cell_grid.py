@@ -73,14 +73,19 @@ class Cell():
     EMPTY_COLOR_BG = "white"
     EMPTY_COLOR_BORDER = "black"
 
-    def __init__(self, master, x, y, size):
+    def __init__(self, master, x, y, size, parent=None, position=None):
         """ Constructor of the object called by Cell(...) """
         self.master = master
         self.abs = x
         self.ord = y
-        self.size= size
-        self.fill= False
+        self.size = size
+        self.fill = False
         self.type = None
+        self.parent = parent
+        self.position = position
+        self.g = 0
+        self.h = 0
+        self.f = 0
     
     def getType(self):
         return self.type

@@ -1,5 +1,5 @@
 # AlgoVisuals
 
-## v.0.1
+## v.1.0
 
-Currently only supporting sort algorithms. Work in progress.
+Supports both sorting and searching algorithms. A* in progress.
