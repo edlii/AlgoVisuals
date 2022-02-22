@@ -27,27 +27,21 @@ def depth_first_search(grid, vis, row, col, tickTime):
     searchPressed()
 
     # Stack variable
-    st = []
-    st.append([row, col])
+    st = [[]]
+    st.append([(row, col)])
 
     while len(st) > 0:
-        top = st[len(st)-1]
+        firstPath = st[len(st)-1]
         st.remove(st[len(st)-1])
-        x = top[0]
-        y = top[1]
-
-        if not isValid(vis, x, y):
-            continue
+        x, y = firstPath[-1]
 
         # Skip barricade cells
         if grid.coords(x, y).getType() == 3:
             continue
 
-        vis[x][y] = True
-
-        # Target found
-        if foundTarget(vis, getTarget()):
-            break
+        # # Target found
+        # if foundTarget(vis, getTarget()):
+        #     break
         # Colour in non-start cells
         if grid.coords(x, y).getType() != 2:
             newCell = grid.coords(x, y)
@@ -59,6 +53,10 @@ def depth_first_search(grid, vis, row, col, tickTime):
         for i in range(4):
             adjx = x + dRow[i]
             adjy = y + dCol[i]
-            st.append([adjx, adjy])
-            
+            if (isValid(vis, adjx, adjy)):
+                st.append(firstPath + [(adjx, adjy)])
+                vis[adjx][adjy] = True
+                if foundTarget(vis, getTarget()):
+                    grid.drawPath(firstPath)
+                    return
         time.sleep(tickTime)

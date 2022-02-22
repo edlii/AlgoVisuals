@@ -35,12 +35,13 @@ grid = None
 def renderData(data, color):
     global grid
     global canvas
-    global b3, b4, b5
+    global targetToggle, startToggle, drawToggle, clearButton
     canvas.delete("all")
     canvas_width = 800
     canvas_height = 400
     if (algo_menu.get() in sort_algorithm_list):
-        b1.set_text("Sort!")
+        clearButton.grid_forget()
+        sortButton.set_text("Sort!")
         setVisibleDrawMode(False)
         if grid:
             grid.delete("all")
@@ -59,8 +60,9 @@ def renderData(data, color):
             y1 = canvas_height
             canvas.create_rectangle(x0, y0, x1, y1, fill=color[i])
     else:
-        b1.set_text("Search!")
+        sortButton.set_text("Search!")
         setVisibleDrawMode(True)
+        clearButton.grid(row=2, column=2, padx=10, pady=10)
         if not grid:
             grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
             grid.pack()
@@ -70,10 +72,10 @@ def renderData(data, color):
             for i in range(150):
                 x = random.randint(1, 39)
                 y = random.randint(1, 79)
-                if grid.coords(x,y) not in grid.switched:
+                if not grid.coords(x,y).fill:
                     grid.coords(x, y)._switch()
-                    grid.switched.append(grid.coords(x,y)) 
                     grid.coords(x, y).draw()
+                    grid.switched.append(grid.coords(x,y)) 
             draw_mode.set(3)
     main_window.update_idletasks()
 
@@ -94,6 +96,18 @@ def set_speed():
         return 0.1
     else:
         return 0.001
+
+def clear():
+    global grid, canvas
+    canvas_width = 800
+    canvas_height = 400
+    if grid:
+        grid.delete("all")
+        grid = None
+        canvas = Canvas(main_window, width=800, height=400, bg=WHITE)
+        grid = CellGrid(canvas, int(canvas_height/10), int(canvas_width/10), 10)
+        canvas.grid(row=1, column=0, padx=10, pady=10)
+        grid.pack()
 
 def sort():
     global data, grid
@@ -123,15 +137,15 @@ def sort():
         depth_first_search(grid, vis, y, x, timeTick)
 
 def setVisibleDrawMode(on):
-    global b3, b4, b5
+    global targetToggle, startToggle, drawToggle
     if on:
-        b3.place(x = 0, y = 0)
-        b4.place(x = 0, y = 25)
-        b5.place(x = 0, y = 50)
+        targetToggle.place(x = 0, y = 0)
+        startToggle.place(x = 0, y = 25)
+        drawToggle.place(x = 0, y = 50)
     else:
-        b3.place(x = -200)
-        b4.place(x = -200)
-        b5.place(x = -200)
+        targetToggle.place(x = -200)
+        startToggle.place(x = -200)
+        drawToggle.place(x = -200)
 
 def getCurrentDrawMode():
     return draw_mode.get()
@@ -155,28 +169,31 @@ speed_menu.grid(row=1, column=1, padx=5, pady=5)
 speed_menu.current(0)
 
 # Randomize button
-b2 = TkinterCustomButton(master=UI_frame, text="Randomize!", corner_radius=10, command=randomize)
-b2.grid(row=2, column=0, padx=10, pady=10)
+randomizeButton = TkinterCustomButton(master=UI_frame, text="Randomize!", corner_radius=10, command=randomize)
+randomizeButton.grid(row=2, column=0, padx=10, pady=10)
 
 # Sort Button
-b1 = TkinterCustomButton(master=UI_frame, text="Sort!", corner_radius=10, command=sort)
-b1.grid(row=2, column=1, padx=10, pady=10)
+sortButton = TkinterCustomButton(master=UI_frame, text="Sort!", corner_radius=10, command=sort)
+sortButton.grid(row=2, column=1, padx=10, pady=10)
+
+# Clear Button
+clearButton = TkinterCustomButton(master=UI_frame, text="Clear!", corner_radius=10, command=clear)
 
 # Current drawing mode
 draw_mode = IntVar()
 draw_mode.set(1)
 
 # Toggle target button
-b3 = Radiobutton(text="Target Node", bg=WHITE, fg=BLACK, value=1, variable=draw_mode, command=selectTarget)
-b3.place(x = -200, y = 0)
+targetToggle = Radiobutton(text="Target Node", bg=WHITE, fg=BLACK, value=1, variable=draw_mode, command=selectTarget)
+targetToggle.place(x = -200, y = 0)
 
 # Toggle start button
-b4 = Radiobutton(text="Starting Node", bg=WHITE, fg=BLACK, value=2, variable=draw_mode, command=selectStart)
-b4.place(x = -200, y = 25)
+startToggle = Radiobutton(text="Starting Node", bg=WHITE, fg=BLACK, value=2, variable=draw_mode, command=selectStart)
+startToggle.place(x = -200, y = 25)
 
 # Toggle draw button
-b5 = Radiobutton(text="Draw", bg=WHITE, fg=BLACK, value=3, variable=draw_mode, command=selectDraw)
-b5.place(x = -200, y = 50)
+drawToggle = Radiobutton(text="Draw", bg=WHITE, fg=BLACK, value=3, variable=draw_mode, command=selectDraw)
+drawToggle.place(x = -200, y = 50)
 
 # Canvas to render array
 canvas = Canvas(main_window, width=800, height=400, bg=WHITE)

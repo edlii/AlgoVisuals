@@ -128,6 +128,9 @@ class Cell():
             if not self.fill:
                 fill = Cell.EMPTY_COLOR_BG
                 outline = Cell.EMPTY_COLOR_BORDER
+            
+            if self.fill:
+                self.master.switched.append(self)
 
             xmin = self.abs * self.size
             xmax = xmin + self.size
@@ -139,7 +142,7 @@ class Cell():
 
 class CellGrid(Canvas):
 
-    def __init__(self,master, rowNumber, columnNumber, cellSize, *args, **kwargs):
+    def __init__(self, master, rowNumber, columnNumber, cellSize, *args, **kwargs):
         emptyFill()
         
         Canvas.__init__(self, master, width = cellSize * columnNumber , height = cellSize * rowNumber, *args, **kwargs)
@@ -163,7 +166,7 @@ class CellGrid(Canvas):
         #bind moving while clicking
         self.bind("<B1-Motion>", self.handleMouseMotion)
         #bind release button action - clear the memory of midified cells.
-        self.bind("<ButtonRelease-1>", lambda event: self.switched.clear())
+        # self.bind("<ButtonRelease-1>", lambda event: self.switched.clear())
         
         self.draw()
 
@@ -184,12 +187,15 @@ class CellGrid(Canvas):
             cell.draw()
 
     def clear(self):
+        global start, target
         for cell in self.switched:
-            cell.fill = False
-            cell.type = 0
-            cell.draw()
+            if cell:
+                cell.fill = False
+                cell.type = 0
+                cell.draw()
         self.switched.clear()
-            
+        start = None
+        target = None
 
     def _eventCoords(self, event):
         row = int(event.y / self.cellSize)
@@ -203,7 +209,6 @@ class CellGrid(Canvas):
     def singleCell(self, cell):
         cell._switch()
         cell.draw()
-        self.switched.append(cell)
 
     def handleMouseClick(self, event):
         global target, start, targetSelected, startSelected
@@ -220,7 +225,7 @@ class CellGrid(Canvas):
             target = cell
         elif startSelected:
             start = cell
-        #add the cell to the list of cell switched during the click
+        # add the cell to the list of cell switched during the click
         self.switched.append(cell)
 
     def handleMouseMotion(self, event):
