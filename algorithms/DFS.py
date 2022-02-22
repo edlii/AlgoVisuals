@@ -31,9 +31,14 @@ def depth_first_search(grid, vis, row, col, tickTime):
     st.append([(row, col)])
 
     while len(st) > 0:
-        firstPath = st[len(st)-1]
-        st.remove(st[len(st)-1])
+        firstPath = st[-1]
+        st.remove(st[-1])
         x, y = firstPath[-1]
+
+        vis[x][y] = True
+        if foundTarget(vis, getTarget()):
+            grid.drawPath(firstPath)
+            return
 
         # Skip barricade cells
         if grid.coords(x, y).getType() == 3:
@@ -55,8 +60,4 @@ def depth_first_search(grid, vis, row, col, tickTime):
             adjy = y + dCol[i]
             if (isValid(vis, adjx, adjy)):
                 st.append(firstPath + [(adjx, adjy)])
-                vis[adjx][adjy] = True
-                if foundTarget(vis, getTarget()):
-                    grid.drawPath(firstPath)
-                    return
         time.sleep(tickTime)

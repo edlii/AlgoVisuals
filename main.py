@@ -22,7 +22,7 @@ main_window.config(bg=WHITE)
 
 algorithm_name = StringVar()
 sort_algorithm_list = ['Merge Sort', 'Selection Sort', 'Insertion Sort', 'Bubble Sort', 'Quick Sort']
-pathfinding_algo_list = ['Breadth First Search', 'Depth First Search']
+pathfinding_algo_list = ['Breadth-First Search', 'Depth-First Search']
 algo_list = sort_algorithm_list + pathfinding_algo_list
 
 speed_name = StringVar()
@@ -125,12 +125,12 @@ def sort():
         selection_sort(data, renderData, timeTick)
     elif algo_menu.get() == "Quick Sort":
         quick_sort(data, 0, len(data)-1, renderData, timeTick)
-    elif algo_menu.get() == "Breadth First Search":
+    elif algo_menu.get() == "Breadth-First Search":
         vis = [[ False for i in range(int(canvas_width/10))] for i in range(int(canvas_height/10))]
         x = getStart().getX()
         y = getStart().getY()
         breadth_first_search(grid, vis, y, x, timeTick)
-    elif algo_menu.get() == "Depth First Search":
+    elif algo_menu.get() == "Depth-First Search":
         vis = [[ False for i in range(int(canvas_width/10))] for i in range(int(canvas_height/10))]
         x = getStart().getX()
         y = getStart().getY()
