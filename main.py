@@ -4,7 +4,6 @@ from algorithms.MergeSort import merge_sort
 from algorithms.InsertionSort import insertion_sort
 from algorithms.SelectionSort import selection_sort
 from algorithms.QuickSort import quick_sort
-from algorithms.astar import astar
 from algorithms.BFS import breadth_first_search
 
 from tkinter import *
@@ -23,7 +22,7 @@ main_window.config(bg=WHITE)
 
 algorithm_name = StringVar()
 sort_algorithm_list = ['Merge Sort', 'Selection Sort', 'Insertion Sort', 'Bubble Sort', 'Quick Sort']
-pathfinding_algo_list = ['Breadth-First Search', 'Depth-First Search', 'A* Search']
+pathfinding_algo_list = ['Breadth-First Search', 'Depth-First Search']
 algo_list = sort_algorithm_list + pathfinding_algo_list
 
 speed_name = StringVar()
@@ -136,8 +135,6 @@ def sort():
         x = getStart().getX()
         y = getStart().getY()
         depth_first_search(grid, vis, y, x, timeTick)
-    elif algo_menu.get() == "A* Search":
-        astar(grid, timeTick)
 
 def setVisibleDrawMode(on):
     global targetToggle, startToggle, drawToggle

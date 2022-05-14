@@ -102,6 +102,12 @@ class Cell():
     def _switch(self):
         """ Switch if the cell is filled or not. """
         self.fill= not self.fill
+    
+    def same_pos(self, other):
+        return self.position == other.position
+
+    def __hash__(self):               
+        return hash(self.position)
 
     def draw(self):
         global targetSelected, startSelected, drawSelected, pressedSearch
